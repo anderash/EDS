@@ -86,53 +86,48 @@
 	      .type   _reset, %function
         .thumb_func
 
- .long 0x1000
- .long _reset
 
 _reset: 
 
-	// load CMU addr
-	ldr r1 , cmu_base_addr
+	ldr r1 , cmu_base_addr  		 // load CMU addr
 
-	// load HeperCLK Enable
-	ldr r2, [r1 , #CMU_HFPERCLKEN0]
+	
+	ldr r2, [r1 , #CMU_HFPERCLKEN0] 	 // load HeperCLK Enable
 
-	// set bit GPIO clk
-	mov r3, #1
+	
+	mov r3, #1    				// set bit GPIO clk
 	lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
 	orr r2, r2, r3
 
-	// store new value
-	str r2, [r1, #CMU_HFPERCLKEN0]
+	
+	str r2, [r1, #CMU_HFPERCLKEN0]		// store new value
 
 	
 
 
 	//// GPIO setup ////
 
-
-
-	// Set drive strgh
-	ldr r2, gpio_pa_base_addr
-	mov r1, #0x2
+						
+	ldr r2, gpio_pa_base_addr	// set base address
+		
+	mov r1, #0x2			// Set drive strength
 	str r1, [r2, #GPIO_CTRL]
 
-	// Set pins 8-15
+	
 
-	ldr r1, =0x55555555
+	ldr r1, =0x55555555		// set pins 8-15 to output
 	str r1, [r2, #GPIO_MODEH]
 
-
-	ldr r1, =0x00ff
+	ldr r1, =0xffff			// set output to the gamepad
 	str r1, [r2, #GPIO_DOUT]
 
-	ldr r2, gpio_pc_base_addr
 
-	ldr r1, =0x33333333
+	ldr r2, gpio_pc_base_addr	// set base address
+
+	ldr r1, =0x33333333        	// set pins 0-7 to input
 	str r1, [r2, #GPIO_MODEL]
 
-
-	mov r1, #0x00
+	mov r1, #0xff			
 	str r1, [r2, #GPIO_DOUT]
 
 
@@ -143,14 +138,14 @@ _reset:
 
 
 	mov r1, #0xff
-	str r1, [r2, #GPIO_EXTIFALL]
-	str r1, [r2, #GPIO_EXTIRISE]
-	str r1, [r2, #GPIO_IEN]
+	str r1, [r2, #GPIO_EXTIFALL]    // set interrupt on neg-edge
+	str r1, [r2, #GPIO_EXTIRISE]    // set interrupt on pos-edge
+	str r1, [r2, #GPIO_IEN]		// enables interrupt generation
 
 
-	ldr r3, iser0_addr
+	ldr r3, iser0_addr		// enable interrupt handling
 	ldr r1, =0x802
-	str r1, [r3, #0x00]
+	str r1, [r3]
 
 	mov r3, #6
 	ldr r2, =SCR
@@ -175,6 +170,7 @@ gpio_handler:
 	ldr r4, [r2, #GPIO_IF]
 	str r4, [r2, #GPIO_IFC]
 
+
 	ldr r2, gpio_pc_base_addr
 
 	ldr r4, [r2, #GPIO_DIN]
@@ -185,10 +181,9 @@ gpio_handler:
 	ldr r2, gpio_pa_base_addr
 	str r4, [r2, #GPIO_DOUT]
 
-
-
+	
 	bx lr
-	      b .  // Interupt osvosv
+	      b .  // do nothing
 
 	cmu_base_addr:
 		.long CMU_BASE
