@@ -89,12 +89,6 @@
 
 _reset: 
 
-	CMU_BASE = 0x400c8000
-	CMU_HFPERCLKEN0 = 0x044
-	CMU_HFPERCLKEN0_GPIO = 13
-
-
-
 	// load CMU addr
 	ldr r1 , cmu_base_addr
 
@@ -109,45 +103,45 @@ _reset:
 	// store new value
 	str r2, [r1, #CMU_HFPERCLKEN0]
 
-	cmu_base_addr:
-		.long CMU_BASE
+	
 
 
 	//// GPIO setup ////
 
-	GPIO_BASE = 0x40006000
-	GPIO_PA_CTRL = 0x00
+
 
 	// Set drive strgh
-	ldr r2, gpio_base_addr
+	ldr r2, gpio_pa_base_addr
 	mov r1, #0x2
-	str r1, [r2, #GPIO_PA_CTRL]
-
+	str r1, [r2, #GPIO_CTRL]
 
 	// Set pins 8-15
-	GPIO_PA_MODEH = 0x008
 
 	ldr r1, =0x55555555
-	str r1, [r2, #GPIO_PA_MODEH]
+	str r1, [r2, #GPIO_MODEH]
 
-	GPIO_PC_MODEL = 0x04c
-
-	ldr r1, =0x33333333
-	str r1, [r2, #GPIO_PC_MODEL]
-	
-	GPIO_PC_DOUT = 0x054
-
-	mov r1, #0x00
-	str r1, [r2, #GPIO_PC_DOUT]
-
-	GPIO_PA_DOUT = 0x00c
 
 	ldr r1, =0xaaff
-	str r1, [r2, #GPIO_PA_DOUT]
+	str r1, [r2, #GPIO_DOUT]
+
+	ldr r2, gpio_pc_base_addr
+
+	ldr r1, =0x33333333
+	str r1, [r2, #GPIO_MODEL]
 
 
+	mov r1, #0x00
+	str r1, [r2, #GPIO_DOUT]
 
+
+	ldr r3, iser0_addr
+	ldr r1, =0x802
+	str r1, [r3, #0x00]
+
+	mov r3, #6
 	
+
+	wfi	
 	      b .  // do nothing
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -180,20 +174,34 @@ gpio_handler:
 	// mov r1, #0xff
 	str r1, [r2, #GPIO_IEN]
 
-	ldr r3, iser0_addr
-	ldr r1, =0x802
-	str r1, [r3, #0x00]
+
+	ldr r2, gpio_base_addr
+	ldr r4, [r2, #GPIO_IF]
 
 
 
 
-	      b .  // Interupt osvosv
 	
-iser0_addr:
+
+	bx lr
+	      b .  // Interupt osvosv
+
+	cmu_base_addr:
+		.long CMU_BASE
+	
+	iser0_addr:
 		.long ISER0
 
 	gpio_base_addr:
 		.long GPIO_BASE
+
+	gpio_pa_base_addr:
+		.long GPIO_PA_BASE
+
+	gpio_pc_base_addr:
+		.long GPIO_PC_BASE
+
+
 
 	/////////////////////////////////////////////////////////////////////////////
 	
