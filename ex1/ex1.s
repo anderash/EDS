@@ -122,18 +122,29 @@ _reset:
 	ldr r1, =0x55555555
 	str r1, [r2, #GPIO_MODEH]
 
-
-	ldr r1, =0xaaff
+	ldr r1, =0xff00
 	str r1, [r2, #GPIO_DOUT]
+
 
 	ldr r2, gpio_pc_base_addr
 
 	ldr r1, =0x33333333
 	str r1, [r2, #GPIO_MODEL]
 
-
-	mov r1, #0x00
+	mov r1, #0xff
 	str r1, [r2, #GPIO_DOUT]
+
+
+	ldr r2, gpio_base_addr
+
+	ldr r1, =0x22222222
+	str r1, [r2, #GPIO_EXTIPSELL]
+
+
+	mov r1, #0xff
+	str r1, [r2, #GPIO_EXTIFALL]
+	str r1, [r2, #GPIO_EXTIRISE]
+	str r1, [r2, #GPIO_IEN]
 
 
 	ldr r3, iser0_addr
@@ -141,7 +152,8 @@ _reset:
 	str r1, [r3, #0x00]
 
 	mov r3, #6
-	
+	ldr r2, =SCR
+	str r3, [r2]	
 
 	wfi	
 	      b .  // do nothing
@@ -156,34 +168,23 @@ _reset:
         .thumb_func
 gpio_handler:  
 
-	GPIO_EXTIPSELL = 0x100
-
-	ldr r1, =0x22222222
-	str r1, [r2, #GPIO_EXTIPSELL]
-
-
-	GPIO_EXTIFALL = 0x10c
-	mov r1, #0xff
-	str r1, [r2, #GPIO_EXTIFALL]
-
-
-	GPIO_EXTIRISE = 0x108
-	// mov r1, #0xff
-	str r1, [r2, #GPIO_EXTIRISE]
-
-
-	GPIO_IEN = 0x110
-	// mov r1, #0xff
-	str r1, [r2, #GPIO_IEN]
-
 
 	ldr r2, gpio_base_addr
+
 	ldr r4, [r2, #GPIO_IF]
+	str r4, [r2, #GPIO_IFC]
 
+	ldr r2, gpio_pc_base_addr
 
+	ldr r4, [r2, #GPIO_DIN]
 
+	lsl r4, r4, #8
 
 	
+	ldr r2, gpio_pa_base_addr
+	str r4, [r2, #GPIO_DOUT]
+
+
 
 	bx lr
 	      b .  // Interupt osvosv
