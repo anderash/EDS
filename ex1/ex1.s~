@@ -127,13 +127,13 @@ _reset:
 	ldr r1, =0x33333333        	// set pins 0-7 to input
 	str r1, [r2, #GPIO_MODEL]
 
-	mov r1, #0xff			
+	mov r1, #0xff			// enable internal pull-up
 	str r1, [r2, #GPIO_DOUT]
 
 
-	ldr r2, gpio_base_addr
+	ldr r2, gpio_base_addr		// set base address
 
-	ldr r1, =0x22222222
+	ldr r1, =0x22222222		
 	str r1, [r2, #GPIO_EXTIPSELL]
 
 
@@ -147,11 +147,11 @@ _reset:
 	ldr r1, =0x802
 	str r1, [r3]
 
-	mov r3, #6
-	ldr r2, =SCR
+	mov r3, #6			// enable deep sleep and automatic 
+	ldr r2, =SCR			// sleep on return from interrupt handler
 	str r3, [r2]	
 
-	wfi	
+	wfi				// go into sleep mode
 	      b .  // do nothing
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -167,22 +167,20 @@ gpio_handler:
 
 	ldr r2, gpio_base_addr
 
-	ldr r4, [r2, #GPIO_IF]
-	str r4, [r2, #GPIO_IFC]
+	ldr r4, [r2, #GPIO_IF]		// getting the source of the interrupt
+	str r4, [r2, #GPIO_IFC]		// clear the interrupt
 
 
 	ldr r2, gpio_pc_base_addr
+	ldr r4, [r2, #GPIO_DIN]		// get input from gamepad buttons
+	lsl r4, r4, #8			// shift left from 0-7 to 8-15 in order
+					// in order to control LEDs
 
-	ldr r4, [r2, #GPIO_DIN]
-
-	lsl r4, r4, #8
-
-	
 	ldr r2, gpio_pa_base_addr
-	str r4, [r2, #GPIO_DOUT]
+	str r4, [r2, #GPIO_DOUT]	// set LED values
 
 	
-	bx lr
+	bx lr				// branch back to sleep
 	      b .  // do nothing
 
 	cmu_base_addr:
