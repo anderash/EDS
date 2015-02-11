@@ -19,7 +19,7 @@ void setupTimer(uint16_t period)
 
 	*CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_TIMER1; // Enable clock 
 	*TIMER1_TOP = period; // Set timer period
-	*TIMER1_IEN = 0x01;
+	*TIMER1_IEN = 0x01; // OK
 	*TIMER1_CMD = 0x01;
 	 
 }
