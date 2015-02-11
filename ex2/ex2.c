@@ -33,8 +33,8 @@ int main(void)
      instead of infinite loop for busy-waiting
   */
 	*SCR = 6;
-	//EMU_EnterEM2();
-
+	__asm("WFI");
+	while(1)
   return 0;
 }
 

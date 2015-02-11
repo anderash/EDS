@@ -3,13 +3,29 @@
 
 #include "efm32gg.h"
 
+volatile int cnt = 0;
+uint32_t lights;
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
   /*
     TODO feed new samples to the DAC
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
-  */  
+  */ 
+	*TIMER1_IFC = 1;
+	cnt = cnt + 1;
+	if(cnt == 1000){
+		cnt = 0;
+		lights = *GPIO_PA_DOUT;
+		if(lights < 0xfdff){
+			lights = lights + 256;
+			*GPIO_PA_DOUT = lights;
+		}
+		else {
+			lights = 0x0000;
+			*GPIO_PA_DOUT = lights;
+		}	
+	} 
 }
 
 void GPIO_HANDLER()
