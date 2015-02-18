@@ -84,3 +84,26 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 		GPIO_HANDLER();
 }
 
+void chooseTone(int button)
+{
+	int period;
+	switch (button){
+		case 1:
+			period = SAMPLE_F/NOTE_C4;
+		case 2:
+			period = SAMPLE_F/NOTE_D4;
+		case 3:
+			period = SAMPLE_F/NOTE_E4;
+		case 4:
+			period = SAMPLE_F/NOTE_F4;
+		case 5:
+			period = SAMPLE_F/NOTE_G4;
+		case 6:
+			period = SAMPLE_F/NOTE_A4;
+		case 7:
+			period = SAMPLE_F/NOTE_H4;
+
+
+	}
+
+}
