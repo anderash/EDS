@@ -22,6 +22,7 @@ void setupGPIO();
 int main(void) 
 {  
   /* Call the peripheral setup functions */
+  *GPIO_IFC = 0xff;
   setupGPIO();
   setupDAC();
   setupTimer(SAMPLE_PERIOD);

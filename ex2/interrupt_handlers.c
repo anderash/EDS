@@ -4,7 +4,8 @@
 #include "efm32gg.h"
 
 
-int cnt = 0;
+int cnt1 = 0;
+int cnt2 = 0;
 int freq = 330;
 uint32_t knapp;
 uint32_t lights;
@@ -18,9 +19,9 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 	*TIMER1_IFC = 1;
 	//TELLESHITT
 	/*
-	cnt = cnt + 1;
-	if(cnt == 10000){
-		cnt = 0;
+	cnt1 = cnt1 + 1;
+	if(cnt1 == 20000){
+		cnt1 = 0;
 		lights = *GPIO_PA_DOUT;
 		if(lights < 0xfdff){
 			lights = lights + 256;
@@ -30,31 +31,32 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 			lights = 0x0000;
 			*GPIO_PA_DOUT = lights;
 		}	
-	}
-	*/
+	}*/
+	
+	
 	knapp = *GPIO_PC_DIN;
-	knapp = !knapp;
-	knapp &= 0x0001;
-	if (knapp == 1){
+	lights = knapp << 8;
+	*GPIO_PA_DOUT = lights; 
+	
+	if (knapp < 0xff){
 
-		if (cnt < 110){
-			cnt = cnt + 1;
-			*DAC0_CH0DATA = 0x1ff;
-		    *DAC0_CH1DATA = 0x1ff;
+		if (cnt2 < 73){
+			*DAC0_CH0DATA = 0xff;
+		    *DAC0_CH1DATA = 0xff;
 		}
 		else{
-			cnt = cnt + 1;
 			*DAC0_CH0DATA = 0x00;
 		    *DAC0_CH1DATA = 0x00;
-		    if (cnt >= 220){
-		    	cnt = 0;
+		    if (cnt2 >= 146){
+		    	cnt2 = 0;
 		    }			
 		}
 	}
-	if (knapp == 0){
-		*GPIO_PA_DOUT = 0xff
+	//if (knapp == 0){
+		//*GPIO_PA_DOUT = 0x5500;
 
-	}
+	cnt2 = cnt2 + 1;
+
 }
     
 
@@ -72,8 +74,8 @@ void GPIO_HANDLER()
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler() 
 {
     /* TODO handle button pressed event, remember to clear pending interrupt */
-		
-		GPIO_HANDLER();
+		*GPIO_IFC = 0xff;
+		//GPIO_HANDLER();
 }
 
 /* GPIO odd pin interrupt handler */
@@ -81,6 +83,6 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 {
     /* TODO handle button pressed event, remember to clear pending interrupt */
 		
-		GPIO_HANDLER();
+		//GPIO_HANDLER();
 }
 
