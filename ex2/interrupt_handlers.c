@@ -37,9 +37,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 	knapp = *GPIO_PC_DIN;
 	lights = knapp << 8;
 	*GPIO_PA_DOUT = lights; 
-	
-	if (knapp < 0xff){
-
+	if (knapp == SW1)
 		if (cnt2 < 73){
 			*DAC0_CH0DATA = 0xff;
 		    *DAC0_CH1DATA = 0xff;
@@ -51,9 +49,8 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 		    	cnt2 = 0;
 		    }			
 		}
-	}
-	//if (knapp == 0){
-		//*GPIO_PA_DOUT = 0x5500;
+
+	
 
 	cnt2 = cnt2 + 1;
 
@@ -86,23 +83,23 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 		//GPIO_HANDLER();
 }
 
-void chooseTone(int button)
+int chooseTone(uint32_t button)
 {
 	int period;
 	switch (button){
-		case 1:
+		case SW1:
 			period = SAMPLE_F/NOTE_C4;
-		case 2:
+		case SW2:
 			period = SAMPLE_F/NOTE_D4;
-		case 3:
+		case SW3:
 			period = SAMPLE_F/NOTE_E4;
-		case 4:
+		case SW4:
 			period = SAMPLE_F/NOTE_F4;
-		case 5:
+		case SW5:
 			period = SAMPLE_F/NOTE_G4;
-		case 6:
+		case SW6:
 			period = SAMPLE_F/NOTE_A4;
-		case 7:
+		case SW7:
 			period = SAMPLE_F/NOTE_H4;
 
 
