@@ -2,11 +2,11 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
-
+int chooseTone(uint32_t button);
 
 int cnt1 = 0;
 int cnt2 = 0;
-int freq = 330;
+int freq = 73;
 uint32_t knapp;
 uint32_t lights;
 /* TIMER1 interrupt handler */
@@ -37,18 +37,20 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 	knapp = *GPIO_PC_DIN;
 	lights = knapp << 8;
 	*GPIO_PA_DOUT = lights; 
-	if (knapp == SW1)
-		if (cnt2 < 73){
+	freq = chooseTone(knapp);
+	if(knapp <= 0xFE){
+		if (cnt2 < freq){
 			*DAC0_CH0DATA = 0xff;
 		    *DAC0_CH1DATA = 0xff;
 		}
 		else{
 			*DAC0_CH0DATA = 0x00;
 		    *DAC0_CH1DATA = 0x00;
-		    if (cnt2 >= 146){
+		    if (cnt2 >= 2*freq){
 		    	cnt2 = 0;
 		    }			
 		}
+	}
 
 	
 
@@ -83,26 +85,3 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 		//GPIO_HANDLER();
 }
 
-int chooseTone(uint32_t button)
-{
-	int period;
-	switch (button){
-		case SW1:
-			period = SAMPLE_F/NOTE_C4;
-		case SW2:
-			period = SAMPLE_F/NOTE_D4;
-		case SW3:
-			period = SAMPLE_F/NOTE_E4;
-		case SW4:
-			period = SAMPLE_F/NOTE_F4;
-		case SW5:
-			period = SAMPLE_F/NOTE_G4;
-		case SW6:
-			period = SAMPLE_F/NOTE_A4;
-		case SW7:
-			period = SAMPLE_F/NOTE_H4;
-
-
-	}
-
-}

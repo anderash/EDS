@@ -20,3 +20,40 @@ void setupDAC()
     *DAC0_CH1CTRL = 1;
 
 }
+
+int chooseTone(uint32_t button)
+{
+	int period;
+	switch (button){
+		case SW1:
+			period = SAMPLE_F/NOTE_C4;
+			break;
+		case SW2:
+			period = SAMPLE_F/NOTE_D4;
+			break;
+		case SW3:
+			period = SAMPLE_F/NOTE_E4;
+			break;
+		case SW4:
+			period = SAMPLE_F/NOTE_F4;
+			break;
+		case SW5:
+			period = SAMPLE_F/NOTE_G4;
+			break;
+		case SW6:
+			period = SAMPLE_F/NOTE_A4;
+			break;
+		case SW7:
+			period = SAMPLE_F/NOTE_B4;
+			break;
+		case SW8:
+			period = SAMPLE_F/NOTE_C5;
+			break;
+		default:
+			period = 73;
+
+
+	}
+	return period;
+
+}
