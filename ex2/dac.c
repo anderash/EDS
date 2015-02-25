@@ -3,6 +3,8 @@
 
 #include "efm32gg.h"
 
+uint32_t LISA[] = {SW1, 0xFF, SW2, 0xFF, SW3, 0xFF, SW4, 0xFF, SW5, SW5, 0xFF,SW5, SW5, 0xFF, SW6, 0xFF, SW6, 0xFF, SW6, 0xFF, SW6, 0xFF, SW5, SW5, 0xFF, SW4, 0xFF, SW4, 0xFF, SW4, 0xFF, SW4, 0xFF, SW3, SW3, 0xFF, SW3, SW3, 0xFF, SW2, 0xFF, SW2, 0xFF, SW2, 0xFF, SW2, 0xFF, SW1, SW1, SW1, 0xFF};
+
 void setupDAC()
 {
   /*
@@ -57,3 +59,4 @@ int chooseTone(uint32_t button)
 	return period;
 
 }
+
