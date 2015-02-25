@@ -6,9 +6,13 @@ int chooseTone(uint32_t button);
 
 int cnt1 = 0;
 int cnt2 = 0;
+int lisaCnt = 0;
+int delay = 0;
 int freq = 73;
 uint32_t knapp;
 uint32_t lights;
+uint8_t incrementValue;
+uint8_t lydniva = 0;
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
@@ -33,12 +37,40 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 		}	
 	}*/
 	
-	
+	// variables for piano
+	/*
 	knapp = *GPIO_PC_DIN;
 	lights = knapp << 8;
 	*GPIO_PA_DOUT = lights; 
 	freq = chooseTone(knapp);
-	if(knapp <= 0xFE){
+	incrementValue = 255/(2*freq);
+	*/
+	
+	// variables for lisa
+	
+	knapp = LISA[lisaCnt];
+	lights = knapp << 8;
+	*GPIO_PA_DOUT = lights; 
+	freq = chooseTone(knapp);
+	incrementValue = 0xFF/(2*freq);
+
+
+	if(knapp <= 0xFE){ 
+
+	// Sawtooth wave
+	
+		if (cnt2 < 2*freq){
+			*DAC0_CH0DATA = lydniva;
+			*DAC0_CH1DATA = lydniva;
+			lydniva = lydniva + incrementValue;
+		}
+		else{
+			lydniva = 0;
+			cnt2 = 0;			
+		}
+		
+	// Square wave
+	/*
 		if (cnt2 < freq){
 			*DAC0_CH0DATA = 0xff;
 		    *DAC0_CH1DATA = 0xff;
@@ -50,12 +82,27 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 		    	cnt2 = 0;
 		    }			
 		}
+	*/
+
+	} //end of first if
+	else{
+		*DAC0_CH0DATA = 0x00;
+		*DAC0_CH1DATA = 0x00;
+		if(cnt2 > 40){
+			cnt2 = 0;
+		}
 	}
-
-	
-
 	cnt2 = cnt2 + 1;
+	delay = delay + 1;	
 
+	if(delay > 2000){
+		lisaCnt = lisaCnt + 1;
+		delay = 0;
+		if(lisaCnt > 50){
+			lisaCnt = 0;		
+		}
+	}
+	
 }
     
 

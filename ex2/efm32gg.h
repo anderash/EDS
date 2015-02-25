@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 // GPIO
-
 #define GPIO_PA_BASE 0x40006000
 #define GPIO_PB_BASE 0x40006024
 #define GPIO_PC_BASE 0x40006048
@@ -150,7 +149,7 @@
 #define NOTE_A4  440
 #define NOTE_B4  494
 #define NOTE_C5  523
-
+extern uint32_t LISA[51];
 // Frequensies
 #define CLK_FREQ 14000000
 #define SAMPLE_F 22050
