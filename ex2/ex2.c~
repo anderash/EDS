@@ -10,13 +10,14 @@
   registers are 16 bits.
 */
 /* The period between sound samples, in clock cycles */
-#define   SAMPLE_PERIOD   635
+#define   SAMPLE_PERIOD   1270
 
 /* Declaration of peripheral setup functions */
 void setupTimer(uint32_t period);
 void setupDAC();
 void setupNVIC();
 void setupGPIO();
+int chooseTone(uint32_t button);
 
 /* Your code will start executing here */
 int main(void) 
@@ -32,7 +33,7 @@ int main(void)
   /* TODO for higher energy efficiency, sleep while waiting for interrupts
      instead of infinite loop for busy-waiting
   */
-	*SCR = 6;
+	*SCR = 2;
 	__asm("WFI");
 	while(1)
   return 0;
@@ -47,7 +48,7 @@ void setupNVIC()
      You will need TIMER1, GPIO odd and GPIO even interrupt handling for this
      assignment.
   */
-	*ISER0 = 0x4000802; // Enable interrupt handling: TIMER1, GPIO_ODD, GPIO_EVEN
+	*ISER0 = 0x1802; // Enable interrupt handling: TIMER1, GPIO_ODD, GPIO_EVEN
 	
 }
 

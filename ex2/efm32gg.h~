@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 // GPIO
-
 #define GPIO_PA_BASE 0x40006000
 #define GPIO_PB_BASE 0x40006024
 #define GPIO_PC_BASE 0x40006048
@@ -164,3 +163,7 @@
 #define SW6 0xDF
 #define SW7 0xBF
 #define SW8 0x7F
+
+// SANGER
+extern uint32_t LISA[51];
+extern uint8_t Tada[136107];

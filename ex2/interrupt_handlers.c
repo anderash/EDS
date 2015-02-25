@@ -21,6 +21,18 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
   */ 
 	*TIMER1_IFC = 1;
+		
+	*DAC0_CH0DATA = Tada[cnt1];
+	*DAC0_CH1DATA = Tada[cnt1];
+
+	if (cnt1 > 105507) {
+		cnt1 = 0;
+	}
+	else{
+		cnt1 = cnt1 + 1;
+}
+
+
 	//TELLESHITT
 	/*
 	cnt1 = cnt1 + 1;
@@ -45,44 +57,46 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 	freq = chooseTone(knapp);
 	incrementValue = 255/(2*freq);
 	*/
+
+/* LISA SANG
 	
-	// variables for lisa
+		// variables for lisa
 	
-	knapp = LISA[lisaCnt];
-	lights = knapp << 8;
-	*GPIO_PA_DOUT = lights; 
-	freq = chooseTone(knapp);
-	incrementValue = 0xFF/(2*freq);
+		knapp = LISA[lisaCnt];
+		lights = knapp << 8;
+		*GPIO_PA_DOUT = lights; 
+		freq = chooseTone(knapp);
+		incrementValue = 0xFF/(2*freq);
 
 
-	if(knapp <= 0xFE){ 
+		if(knapp <= 0xFE){ 
 
-	// Sawtooth wave
+		// Sawtooth wave
 	
-		if (cnt2 < 2*freq){
-			*DAC0_CH0DATA = lydniva;
-			*DAC0_CH1DATA = lydniva;
-			lydniva = lydniva + incrementValue;
-		}
-		else{
-			lydniva = 0;
-			cnt2 = 0;			
-		}
+			if (cnt2 < 2*freq){
+				*DAC0_CH0DATA = lydniva;
+				*DAC0_CH1DATA = lydniva;
+				lydniva = lydniva + incrementValue;
+			}
+			else{
+				lydniva = 0;
+				cnt2 = 0;			
+			}
 		
-	// Square wave
-	/*
-		if (cnt2 < freq){
-			*DAC0_CH0DATA = 0xff;
-		    *DAC0_CH1DATA = 0xff;
-		}
-		else{
-			*DAC0_CH0DATA = 0x00;
-		    *DAC0_CH1DATA = 0x00;
-		    if (cnt2 >= 2*freq){
-		    	cnt2 = 0;
-		    }			
-		}
-	*/
+		// Square wave
+		
+			if (cnt2 < freq){
+				*DAC0_CH0DATA = 0xff;
+				*DAC0_CH1DATA = 0xff;
+			}
+			else{
+				*DAC0_CH0DATA = 0x00;
+				*DAC0_CH1DATA = 0x00;
+				if (cnt2 >= 2*freq){
+					cnt2 = 0;
+				}			
+			}
+		
 
 	} //end of first if
 	else{
@@ -102,11 +116,11 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 			lisaCnt = 0;		
 		}
 	}
-	
+*/	
 }
     
 
-	 
+
 
 void GPIO_HANDLER()
 {

@@ -149,7 +149,7 @@
 #define NOTE_A4  440
 #define NOTE_B4  494
 #define NOTE_C5  523
-extern uint32_t LISA[51];
+
 // Frequensies
 #define CLK_FREQ 14000000
 #define SAMPLE_F 22050
@@ -163,3 +163,7 @@ extern uint32_t LISA[51];
 #define SW6 0xDF
 #define SW7 0xBF
 #define SW8 0x7F
+
+// SANGER
+extern uint32_t LISA[51];
+extern uint8_t Tada[105507];
