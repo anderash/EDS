@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 // GPIO
 #define GPIO_PA_BASE 0x40006000
@@ -168,6 +169,9 @@
 int chooseTone(uint32_t button);
 bool playTada(int cnt);
 bool playLisa(int cnt);
+bool playError(int cnt);
+
 // SONGS
 extern uint32_t LISA[51];
 extern uint8_t Tada[105507];
+extern uint8_t Error[12000];

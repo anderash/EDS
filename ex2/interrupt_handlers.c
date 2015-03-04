@@ -43,7 +43,8 @@ if(knapp <= 0xFE){
 			finished = false;
 			break;
 		case SW3:
-			
+			lastPress = knapp;
+			finished = false;
 			break;
 		case SW4:
 			
@@ -86,9 +87,9 @@ if (!finished){
 			freq = chooseTone(note);
 			incrementValue = 0xFF/(2*freq);				
 			finished = false;
-			// Sawtooth wave
 
-				if (cnt1 < 2*freq){
+			// Sawtooth wave
+				if (cnt1 < 2*freq){					
 					*DAC0_CH0DATA = lydniva;
 					*DAC0_CH1DATA = lydniva;
 					lydniva = lydniva + incrementValue;
@@ -111,6 +112,13 @@ if (!finished){
 				}
 			break;
 
+		case SW3:
+			finished = playError(cnt1);
+			if (finished){
+				cnt1 = 0;
+			}
+			cnt1 = cnt1 + 1;
+			break;
 		default:
 			finished = true;
 			cnt1 = 0;
@@ -119,6 +127,9 @@ if (!finished){
 else{
 	lights = knapp << 8;
 	*GPIO_PA_DOUT = lights;
+	cnt1 = 0;
+	*DAC0_CH0DATA = 0x80;
+	*DAC0_CH1DATA = 0x80;
 }
 
 
