@@ -13,11 +13,7 @@
 #define   SAMPLE_PERIOD   635
 
 /* Declaration of peripheral setup functions */
-void setupTimer(uint32_t period);
-void setupDAC();
-void setupNVIC();
-void setupGPIO();
-int chooseTone(uint32_t button);
+
 
 /* Your code will start executing here */
 int main(void) 

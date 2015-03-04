@@ -20,6 +20,7 @@ bool playTada(int cnt)
 	return finished;
 }
 
+// Funtion to play Error
 bool playError(int cnt)
 {
 	*DAC0_CH0DATA = Error[cnt];
@@ -35,6 +36,7 @@ bool playError(int cnt)
 	return finished;
 }
 
+// Funtion to play marioJump
 bool playMariojump(int cnt)
 {
 	*DAC0_CH0DATA = marioJump[cnt];
@@ -49,6 +51,7 @@ bool playMariojump(int cnt)
 	}
 	return finished;
 }
+
 //Funtion to choose piano-tones and return correct period for sawtooth
 int chooseTone(uint32_t button)
 {
@@ -79,11 +82,12 @@ int chooseTone(uint32_t button)
 			period = SAMPLE_F/NOTE_C5;
 			break;
 		default:
-			period = 73;
+			period = 50;
 
 
 	}
 	return period;
 
 }
+
 

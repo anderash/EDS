@@ -2,6 +2,15 @@
 
 #include "efm32gg.h"
 
+//CONTAINS SONGS AND ARRAYS OF SOUNDS
+
+//Song: "Lisa gikk til skolen, contains the correct button-presses to play song"
+uint32_t LISA[] = {SW1, 0xFF, SW2, 0xFF, SW3, 0xFF, SW4, 0xFF, SW5, SW5, 
+	0xFF,SW5, SW5, 0xFF, SW6, 0xFF, SW6, 0xFF, SW6, 0xFF, SW6, 0xFF, SW5, 
+	SW5, 0xFF, SW4, 0xFF, SW4, 0xFF, SW4, 0xFF, SW4, 0xFF, SW3, SW3, 0xFF, 
+	SW3, SW3, 0xFF, SW2, 0xFF, SW2, 0xFF, SW2, 0xFF, SW2, 0xFF, SW1, SW1, SW1, 0xFF};
+
+//Sample-values to play "Tada-sound"
 uint8_t Tada[] = 
 {0x80,
 0x80,
@@ -28662,6 +28671,30 @@ uint8_t Tada[] =
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 uint8_t Error[]=
 {
 0x80,
@@ -40751,8 +40784,20 @@ uint8_t Error[]=
 
 
 
-uint8_t marioJump[] =
-{0x7F,
+
+
+
+
+
+
+
+
+
+
+
+uint8_t marioJump[] = 
+{
+0x7F,
 0x7F,
 0x80,
 0x7F,
@@ -49581,6 +49626,4 @@ uint8_t marioJump[] =
 0x6E,
 0x67,
 0x6B,
-0x6E,
-0x63,
-0x67};
+0x6E};

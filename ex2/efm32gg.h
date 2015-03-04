@@ -53,6 +53,7 @@
 #define CMU_CMD          ((volatile uint32_t*)(CMU_BASE2 + 0x024))
 
 #define CMU2_HFPERCLKEN0_DAC0   (1 << 17)
+#define CMU2_HFPERCLKEN0_DAC0_Disable   (0 << 17)
 #define CMU2_HFPERCLKEN0_PRS    (1 << 15)
 #define CMU2_HFPERCLKEN0_GPIO   (1 << 13)
 #define CMU2_HFPERCLKEN0_TIMER1 (1 << 6)
@@ -164,8 +165,14 @@
 #define SW6 0xDF
 #define SW7 0xBF
 #define SW8 0x7F
+#define NO_SW 0xFF
 
 //FUNCTIONS
+void setupTimer(uint32_t period);
+void setupDAC();
+void disableDAC();
+void setupNVIC();
+void setupGPIO();
 int chooseTone(uint32_t button);
 bool playTada(int cnt);
 bool playLisa(int cnt);

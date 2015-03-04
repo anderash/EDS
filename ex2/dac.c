@@ -3,7 +3,7 @@
 
 #include "efm32gg.h"
 
-uint32_t LISA[] = {SW1, 0xFF, SW2, 0xFF, SW3, 0xFF, SW4, 0xFF, SW5, SW5, 0xFF,SW5, SW5, 0xFF, SW6, 0xFF, SW6, 0xFF, SW6, 0xFF, SW6, 0xFF, SW5, SW5, 0xFF, SW4, 0xFF, SW4, 0xFF, SW4, 0xFF, SW4, 0xFF, SW3, SW3, 0xFF, SW3, SW3, 0xFF, SW2, 0xFF, SW2, 0xFF, SW2, 0xFF, SW2, 0xFF, SW1, SW1, SW1, 0xFF};
+
 
 void setupDAC()
 {
@@ -21,4 +21,10 @@ void setupDAC()
     *DAC0_CH0CTRL = 1;
     *DAC0_CH1CTRL = 1;
 
+}
+
+void disableDAC(){
+	*CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_DAC0_Disable;
+	*DAC0_CH0CTRL = 0;
+    *DAC0_CH1CTRL = 0;
 }
