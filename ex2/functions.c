@@ -11,7 +11,7 @@ bool playTada(int cnt)
 	*DAC0_CH1DATA = Tada[cnt];
 	bool finished = false;
 
-	if (cnt > 105507) {		
+	if (cnt > 28600) {		
 		finished = true;
 	}
 	else{		

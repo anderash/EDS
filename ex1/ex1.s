@@ -173,8 +173,7 @@ gpio_handler:
 
 	ldr r2, gpio_pc_base_addr
 	ldr r4, [r2, #GPIO_DIN]		// get input from gamepad buttons
-	lsl r4, r4, #8			// shift left from 0-7 to 8-15 in order
-					// in order to control LEDs
+	lsl r4, r4, #8			// shift left from 0-7 to 8-15 in order in order to control LEDs
 
 	ldr r2, gpio_pa_base_addr
 	str r4, [r2, #GPIO_DOUT]	// set LED values

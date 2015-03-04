@@ -21,7 +21,7 @@ void setupGPIO()
 
 	*GPIO_EXTIPSELL 	= 0x22222222; // 
 	*GPIO_EXTIFALL		= 0xFF;				//Set interrupt on neg-edge
-	*GPIO_EXTIRISE		= 0xFF;				// Set interrupt on pos-edge
+  //*GPIO_EXTIRISE		= 0xFF;				// Set interrupt on pos-edge
 	*GPIO_IEN		= 0xFF;				// Enable interrupt generation
 }
 

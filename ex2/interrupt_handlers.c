@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "efm32gg.h"
 
@@ -7,7 +8,7 @@
 int cnt1 = 0;
 int cnt2 = 0;
 int lisaCnt = 0;
-int delay = 0;
+int delay1 = 0;
 int freq = 73;
 bool finished = true;
 uint32_t note;
@@ -27,51 +28,17 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 
 knapp = *GPIO_PC_DIN;
 
+/*
 
-//Only play when a button is pressed
-if(knapp <= 0xFE){ 
-	lights = knapp << 8;
-	*GPIO_PA_DOUT = lights;
 
-	switch (knapp){
-		case SW1:
-			lastPress = knapp;
-			finished = false;
-			break;
-		case SW2:
-			lastPress = knapp;
-			finished = false;
-			break;
-		case SW3:
-			lastPress = knapp;
-			finished = false;
-			break;
-		case SW4:
-			
-			break;
-		case SW5:
-			
-			break;
-		case SW6:
-			
-			break;
-		case SW7:
-			
-			break;
-		case SW8:
-			
-			break;
-		default:
-			lastPress = 0xFF;
-	
-	}
-
-}
+}*/
 
 if (!finished){
 	switch(lastPress){
-		//PLAY "Tada"
+
+		//PLAY "Tada"			
 		case SW1:
+			*GPIO_PA_DOUT = SW1 << 8;
 			finished = playTada(cnt1);
 			if (finished){
 				cnt1 = 0;
@@ -100,11 +67,11 @@ if (!finished){
 				}
 
 				cnt1 = cnt1 + 1;
-				delay = delay + 1;	
+				delay1 = delay1 + 1;	
 
-				if(delay > 2000){
+				if(delay1 > 2000){
 					lisaCnt = lisaCnt + 1;
-					delay = 0;
+					delay1 = 0;
 					if(lisaCnt > 50){
 						lisaCnt = 0;
 						finished = true;		
@@ -112,29 +79,32 @@ if (!finished){
 				}
 			break;
 
+		//PLAY Error sound
 		case SW3:
+			*GPIO_PA_DOUT = SW3 << 8;
 			finished = playError(cnt1);
 			if (finished){
 				cnt1 = 0;
 			}
 			cnt1 = cnt1 + 1;
 			break;
+
 		default:
 			finished = true;
 			cnt1 = 0;
 	}
 }
+
 else{
 	lights = knapp << 8;
 	*GPIO_PA_DOUT = lights;
 	cnt1 = 0;
 	*DAC0_CH0DATA = 0x80;
 	*DAC0_CH1DATA = 0x80;
+	lastPress = 0;
+
 }
 
-
-	
-	// variables for piano
 
 }
     
@@ -143,18 +113,29 @@ else{
 
 void GPIO_HANDLER()
 {
-		*GPIO_IFC = 0xff;
-	  uint32_t a = *GPIO_PC_DIN;
- 	  a = a << 8;
-		*GPIO_PA_DOUT = a; 
+
+	*GPIO_IFC = 0xff;
+	knapp = *GPIO_PC_DIN;
+	
+		lastPress = knapp;
+		finished = false;
+		cnt1 = 0;
+		lisaCnt = 0;
+	
+	
+
+
+	  //uint32_t a = *GPIO_PC_DIN;
+	  
+ 	  //a = a << 8;
+		//*GPIO_PA_DOUT = a; 
 }
 
 /* GPIO even pin interrupt handler */
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler() 
 {
     /* TODO handle button pressed event, remember to clear pending interrupt */
-		*GPIO_IFC = 0xff;
-		//GPIO_HANDLER();
+		GPIO_HANDLER();
 }
 
 /* GPIO odd pin interrupt handler */
@@ -162,7 +143,7 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 {
     /* TODO handle button pressed event, remember to clear pending interrupt */
 		
-		//GPIO_HANDLER();
+		GPIO_HANDLER();
 }
 
 

@@ -173,5 +173,5 @@ bool playError(int cnt);
 
 // SONGS
 extern uint32_t LISA[51];
-extern uint8_t Tada[105507];
+extern uint8_t Tada[28600];
 extern uint8_t Error[12000];
