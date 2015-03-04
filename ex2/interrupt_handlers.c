@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdlib.h>
 
 #include "efm32gg.h"
 
@@ -22,15 +21,13 @@ uint8_t lydniva = 0;
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
-  /*
-    TODO feed new samples to the DAC
-    remember to clear the pending interrupt by writing 1 to TIMER1_IFC
-  */ 
+
 
 *TIMER1_IFC = 1;
 
 knapp = *GPIO_PC_DIN;
 
+//PLAY Statup-tada when the chip boots
 if(startup && !finished){
 	*GPIO_PA_DOUT = 0x00 << 8;
 	finished = playTada(cnt1);
@@ -41,32 +38,32 @@ if(startup && !finished){
 	cnt1 = cnt1 + 1;
 }
 	
-
+//Songs not finished playing
 else if (!finished){
 
 	switch(lastPress){
 
 		//PLAY "Tada"			
 		case SW1:
-			*GPIO_PA_DOUT = SW1 << 8;
-			finished = playTada(cnt1);
-			if (finished){
+			*GPIO_PA_DOUT = SW1 << 8;	//Set LED
+			finished = playTada(cnt1);	//Use playfunc.
+			if (finished){				//Done playing, reset
 				cnt1 = 0;
 			}
-			cnt1 = cnt1 + 1;
+			cnt1 = cnt1 + 1;			
 			break;
 
 		// PLAY "LISA GIKK TIL SKOLEN"	
 		case SW2:		
-			note = LISA[lisaCnt];
-			lights = note << 8;
+			note = LISA[lisaCnt];			//Chose note from note array
+			lights = note << 8;				//Set LED
 			*GPIO_PA_DOUT = lights; 
-			freq = chooseTone(note);		
+			freq = chooseTone(note);		//Choose correct freq. for that note
 			finished = false;
-			incrementValue = 0xFF/(freq);	
+			incrementValue = 0xFF/(freq);	//Set the incremention rate for the sawtooth
 
 			// Sawtooth wave
-			if(note <= 0xFE){
+			if(note <= 0xFE){				//Make shure it is not a "brake" in the song
 				if (cnt1 < freq){					
 					*DAC0_CH0DATA = lydniva;
 					*DAC0_CH1DATA = lydniva;
@@ -81,10 +78,10 @@ else if (!finished){
 			cnt1 = cnt1 + 1;
 			delay1 = delay1 + 1;	
 
-			if(delay1 > 2000){
+			if(delay1 > 2756){				//Each note is held for 2756 counts = 0.125 sec
 				lisaCnt = lisaCnt + 1;
 				delay1 = 0;
-				if(lisaCnt > 50){
+				if(lisaCnt > 50){			//Song is done: reset counters
 					lisaCnt = 0;
 					cnt1 = 0;
 					finished = true;		
@@ -116,7 +113,7 @@ else if (!finished){
 		case SW5:
 			*GPIO_IEN = 0;	//Disable GPIO interrupts to play piano
 
-			if (knapp <= 0xFE){	
+			if (knapp <= 0xFE){			//Make shure a button is pressed
 				freq = chooseTone(knapp);
 				incrementValue = 0xFF/(freq);
 				lights = knapp << 8;
@@ -138,7 +135,7 @@ else if (!finished){
 				}
 
 			}
-			else{
+			else{						//No button pressed, turn off lights
 				lights = knapp << 8;
 				*GPIO_PA_DOUT = lights;
 			}

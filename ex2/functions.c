@@ -52,7 +52,7 @@ bool playMariojump(int cnt)
 	return finished;
 }
 
-//Funtion to choose piano-tones and return correct period for sawtooth
+//Function to choose piano-tones and return correct period for sawtooth
 int chooseTone(uint32_t button)
 {
 	int period;
