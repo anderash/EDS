@@ -34,6 +34,21 @@ bool playError(int cnt)
 	}
 	return finished;
 }
+
+bool playMariojump(int cnt)
+{
+	*DAC0_CH0DATA = marioJump[cnt];
+	*DAC0_CH1DATA = marioJump[cnt];
+	bool finished = false;
+
+	if (cnt > 8830) {		
+		finished = true;
+	}
+	else{		
+		finished = false;
+	}
+	return finished;
+}
 //Funtion to choose piano-tones and return correct period for sawtooth
 int chooseTone(uint32_t button)
 {

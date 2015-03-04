@@ -176,3 +176,4 @@ bool playMariojump(int cnt);
 extern uint32_t LISA[51];
 extern uint8_t Tada[28600];
 extern uint8_t Error[12000];
+extern uint8_t marioJump[8830];

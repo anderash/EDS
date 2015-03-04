@@ -28,7 +28,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 
 knapp = *GPIO_PC_DIN;
 
-incrementValue = 0x3FF/(2*freq);		
+	
 
 if (!finished){
 
@@ -51,9 +51,9 @@ if (!finished){
 			*GPIO_PA_DOUT = lights; 
 			freq = chooseTone(note);		
 			finished = false;
-
+			incrementValue = 0xFF/(freq);	
 			// Sawtooth wave
-				if (cnt1 < 2*freq){					
+				if (cnt1 < freq){					
 					*DAC0_CH0DATA = lydniva;
 					*DAC0_CH1DATA = lydniva;
 					lydniva = lydniva + incrementValue;
@@ -66,11 +66,12 @@ if (!finished){
 				cnt1 = cnt1 + 1;
 				delay1 = delay1 + 1;	
 
-				if(delay1 > 2000){
+				if(delay1 > 3000){
 					lisaCnt = lisaCnt + 1;
 					delay1 = 0;
 					if(lisaCnt > 50){
 						lisaCnt = 0;
+						cnt1 = 0;
 						finished = true;		
 					}
 				}
@@ -86,19 +87,33 @@ if (!finished){
 			cnt1 = cnt1 + 1;
 			break;
 
+		//PLAY Mariojump
+		case SW4:
+			*GPIO_PA_DOUT = SW4 << 8;
+			finished = playMariojump(cnt1);
+			if (finished){
+				cnt1 = 0;
+			}
+			cnt1 = cnt1 + 1;
+			break;
+
+		//ENABLE PIANO
 		case SW5:
-			*GPIO_IEN = 0;
-			if (knapp <= 0xFE){
+			*GPIO_IEN = 0;	//Disable GPIO interrupts to play piano
+
+			if (knapp <= 0xFE){	
 				freq = chooseTone(knapp);
-				if (knapp == SW8){
+				incrementValue = 0xFF/(freq);	
+				if (knapp == SW8){		//Disable piano by pressing SW8
 					*GPIO_IEN = 0xFF;
 					finished = true;
 					break;
 				}
-				if (cnt1 < 2*freq){					
+				if (cnt1 < freq){					
 					*DAC0_CH0DATA = lydniva;
 					*DAC0_CH1DATA = lydniva;
 					lydniva = lydniva + incrementValue;
+					cnt1 = cnt1 + 1;
 				}
 				else{
 					lydniva = 0;
