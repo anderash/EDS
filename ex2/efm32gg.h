@@ -170,6 +170,7 @@ int chooseTone(uint32_t button);
 bool playTada(int cnt);
 bool playLisa(int cnt);
 bool playError(int cnt);
+bool playMariojump(int cnt);
 
 // SONGS
 extern uint32_t LISA[51];

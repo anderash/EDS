@@ -28,12 +28,10 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 
 knapp = *GPIO_PC_DIN;
 
-/*
-
-
-}*/
+incrementValue = 0x3FF/(2*freq);		
 
 if (!finished){
+
 	switch(lastPress){
 
 		//PLAY "Tada"			
@@ -51,8 +49,7 @@ if (!finished){
 			note = LISA[lisaCnt];
 			lights = note << 8;
 			*GPIO_PA_DOUT = lights; 
-			freq = chooseTone(note);
-			incrementValue = 0xFF/(2*freq);				
+			freq = chooseTone(note);		
 			finished = false;
 
 			// Sawtooth wave
@@ -89,6 +86,34 @@ if (!finished){
 			cnt1 = cnt1 + 1;
 			break;
 
+		case SW5:
+			*GPIO_IEN = 0;
+			if (knapp <= 0xFE){
+				freq = chooseTone(knapp);
+				if (knapp == SW8){
+					*GPIO_IEN = 0xFF;
+					finished = true;
+					break;
+				}
+				if (cnt1 < 2*freq){					
+					*DAC0_CH0DATA = lydniva;
+					*DAC0_CH1DATA = lydniva;
+					lydniva = lydniva + incrementValue;
+				}
+				else{
+					lydniva = 0;
+					cnt1 = 0;			
+				}
+
+			}
+			
+			finished = false;
+			break;
+
+		case SW8:
+			finished = true;
+			break;
+
 		default:
 			finished = true;
 			cnt1 = 0;
@@ -101,7 +126,7 @@ else{
 	cnt1 = 0;
 	*DAC0_CH0DATA = 0x80;
 	*DAC0_CH1DATA = 0x80;
-	lastPress = 0;
+	lastPress = 0xFF;
 
 }
 
@@ -116,11 +141,10 @@ void GPIO_HANDLER()
 
 	*GPIO_IFC = 0xff;
 	knapp = *GPIO_PC_DIN;
-	
-		lastPress = knapp;
-		finished = false;
-		cnt1 = 0;
-		lisaCnt = 0;
+	lastPress = knapp;
+	finished = false;
+	cnt1 = 0;
+	lisaCnt = 0;
 	
 	
 
