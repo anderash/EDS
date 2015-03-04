@@ -164,6 +164,10 @@
 #define SW7 0xBF
 #define SW8 0x7F
 
-// SANGER
+//FUNCTIONS
+int chooseTone(uint32_t button);
+bool playTada(int cnt);
+bool playLisa(int cnt);
+// SONGS
 extern uint32_t LISA[51];
 extern uint8_t Tada[105507];
