@@ -4,18 +4,13 @@
 #include "efm32gg.h"
 
 /* 
-  TODO calculate the appropriate sample period for the sound wave(s) 
-  you want to generate. The core clock (which the timer clock is derived
-  from) runs at 14 MHz by default. Also remember that the timer counter
-  registers are 16 bits.
+  The period between sound samples, in clock cycles 
+  Choosing a sample rate of 22050 Hz => 14MHz/22050Hz ≃ 635 
 */
-/* The period between sound samples, in clock cycles */
-#define   SAMPLE_PERIOD   635
 
-/* Declaration of peripheral setup functions */
+#define   SAMPLE_PERIOD   635   
 
 
-/* Your code will start executing here */
 int main(void) 
 {  
   /* Call the peripheral setup functions */
@@ -26,9 +21,7 @@ int main(void)
   /* Enable interrupt handling */
   setupNVIC();
   
-  /* TODO for higher energy efficiency, sleep while waiting for interrupts
-     instead of infinite loop for busy-waiting
-  */
+//Enable sleep mode, and sleep while wait for interrupt
 	*SCR = 2;
 	__asm("WFI");
 	while(1)
