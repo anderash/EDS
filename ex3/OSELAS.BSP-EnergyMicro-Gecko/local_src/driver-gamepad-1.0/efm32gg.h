@@ -2,9 +2,27 @@
 
 // GPIO
 
-#define GPIO_PA_BASE 0x40006000
-#define GPIO_PB_BASE 0x40006024
-#define GPIO_PC_BASE 0x40006048
+#define GPIO_PA_BASE 		0x40006000
+#define GPIO_PB_BASE 		0x40006024
+#define GPIO_PC_BASE 		0x40006048
+#define GPIO_INTRPT_BASE	0x40006100
+
+#define GPIO_CTRL     	0x00
+#define GPIO_MODEL    	0x04
+#define GPIO_MODEH    	0x08
+#define GPIO_DOUT     	0x0c
+#define GPIO_DOUTSET  	0x10
+#define GPIO_DOUTCLR  	0x14
+#define GPIO_DOUTTGL  	0x18
+#define GPIO_DIN      	0x1c
+#define GPIO_PINLOCKN 	0x20
+
+#define GPIO_INTRPT_EXTIPSELL 0x100
+#define GPIO_INTRPT_EXTIPSELH 0x104
+#define GPIO_INTRPT_EXTIRISE  0x108
+#define GPIO_INTRPT_EXTIFALL  0x10c
+#define GPIO_INTRPT_IEN       0x110
+#define GPIO_INTRPT_IFC       0x11c
 
 #define GPIO_PA_CTRL     ((volatile uint32_t*)(GPIO_PA_BASE + 0x00))
 #define GPIO_PA_MODEL    ((volatile uint32_t*)(GPIO_PA_BASE + 0x04))
