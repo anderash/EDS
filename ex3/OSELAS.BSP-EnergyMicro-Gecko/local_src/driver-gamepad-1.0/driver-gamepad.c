@@ -21,12 +21,12 @@
 /* Prototypes */
 static int __init gamepad_init(void);
 static void __exit gamepad_exit(void);
-static int gamepad_open(struct inode*, struct file*);
-static int gamepad_release(struct inode*, struct file*);
-static ssize_t gamepad_read(struct file*, char* __user, size_t, loff_t*);
-static ssize_t gamepad_write(struct file*, char* __user, size_t, loff_t*);
-static irqreturn_t gpio_interrupt(int, void*, struct pt_regs*);
-static int gamepad_fasync(int, struct file*, int mode);
+//static int gamepad_open(struct inode*, struct file*);
+//static int gamepad_release(struct inode*, struct file*);
+//static ssize_t gamepad_read(struct file*, char* __user, size_t, loff_t*);
+//static ssize_t gamepad_write(struct file*, char* __user, size_t, loff_t*);
+static irqreturn_t gpio_interrupt(int, void*);
+//static int gamepad_fasync(int, struct file*, int mode);
 
 static struct file_operations gamepad_fops =
 {
@@ -47,8 +47,10 @@ static struct fasync_struct* async_queue;
 static void* gpio_pc;
 static void* gpio_intrpt;
 
-static uint32_t last_input;
+static uint32_t buttons;
  
+
+
 static int __init gamepad_init(void)
 {
     /* TODO magne err handling */
@@ -122,62 +124,33 @@ static void __exit gamepad_exit(void)
     unregister_chrdev_region(dev_num, 1);
     
     
-    printk("Gamepad kernel module cleaned up\n");
+    printk("Gamepad kernel module exited\n");
 }
 
-/* FOPS */
-static int gamepad_open(struct inode* inode, struct file* filp) {return 0;}
-static int gamepad_release(struct inode* inode, struct file* filp) {return 0;}
-
-/* 
-    For our purposes, a read of the gamepad equates to the last interrupt signal
-    that was triggered. The logic should be that you receive the signal, then
-    immediately do a read from the gamepad
-*/
-static ssize_t gamepad_read(
-    struct file* filp, char* __user buff, 
-    size_t count, loff_t* offp
-) {
-    /* GPIO_PC_DIN */
-    /* uint32_t button_state = ioread32(gpio_pc + GPIO_Px_DIN); */
-    /* printk(KERN_INFO "GPIO read state\n"); */
-    /* copy_to_user(buff, &button_state, 1); */
-    copy_to_user(buff, &last_input, 1);
-    return 1;
-}
-
-static ssize_t gamepad_write(
-    struct file* filp, char* __user buff, 
-    size_t count, loff_t* offp
-) {
-    return 1;
-}
-
-static irqreturn_t gpio_interrupt(int irq, void* dev_id, struct pt_regs* regs)
+static irqreturn_t gpio_interrupt(int irq, void* dev_id)
 {
-    /* printk(KERN_INFO "GPIO interrupt\n"); */
-    last_input = ioread8(gpio_intrpt + GPIO_INTRPT_IF);
-    uint32_t button_state = ioread8(gpio_pc + GPIO_DIN) ^ 0xFF;
-    /* clear interrupt */
-    iowrite8(last_input, gpio_intrpt + GPIO_INTRPT_IFC);
-    /* For some reason, we sometimes get signals on both edges, this
-       should abort the signal when the button state does not match the
-       interrupt */
-    if (async_queue && (last_input & button_state) != 0) {
-        /* send signal */
-        kill_fasync(&async_queue, SIGIO, POLL_IN);
-    }
+
+    buttons = ioread32(gpio_pc, GPIO_DIN);
+    iowrite32(0xFFFF, gpio_intrpt + GPIO_IFC); //clear interrupt
+
+
     return IRQ_HANDLED;
 }
 
-static int gamepad_fasync(int fd, struct file* filp, int mode)
+static uint32_t read_buttons()
 {
-    return fasync_helper(fd, filp, mode, &async_queue);
+    return buttons;
 }
 
+/*User program opens the driver*/
+static int open_driver(struct inode *node, struct file *filp){
+    printk("The gamepad is ready to go\n");
 
-module_init(gamepad_init);
-module_exit(gamepad_exit);
+    return 0;
+}
 
-MODULE_DESCRIPTION("Kernel module for the gamepad used in TDT4258 fall 2014.");
-MODULE_LICENSE("GPL");
+/*User program close the driver*/
+static int release_driver(struct inode *inode, struct file *filp){
+    printk("Finished with the driver\n");
+    return 0;
+}
