@@ -8,11 +8,11 @@
 #
 CFLAGS += -O2 -g -Wall #-Wsign-compare -Wfloat-equal -Wformat-security #-Werror
 CPPFLAGS +=
-LDFLAGS +=
+LDFLAGS += 
 
-
+OBJ = screen.o
 all: game
-
+game: ${OBJ}
 clean:
 	-rm -f game
 

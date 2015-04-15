@@ -6,9 +6,10 @@ cat /etc/issue
 # disabled in the kernel
 mount -t proc proc /proc 2>/dev/null
 mount -t sysfs sys /sys
+echo 0 > /sys/class/graphics/fbcon/cursor_blink
+
 
 
 export PATH=$PATH:/sbin:/usr/bin:/bin
-exec /bin/sh
-
 modprobe driver-gamepad
+exec /bin/sh
