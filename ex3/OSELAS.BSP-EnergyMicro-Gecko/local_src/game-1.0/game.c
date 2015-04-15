@@ -34,8 +34,8 @@ void guessGame(){
 	int target;
 	int tries = 0;
 	int maxGuess = 8;
-	time_t t;
-	srand((unsigned)time(&t));
+	//time_t t;
+	//srand((unsigned)time(&t));
 	while (1){
 		//get button press
 		//Set button press to int
@@ -80,5 +80,3 @@ void guessGame(){
 		sleep(2);
 	}
 }
-
-void 

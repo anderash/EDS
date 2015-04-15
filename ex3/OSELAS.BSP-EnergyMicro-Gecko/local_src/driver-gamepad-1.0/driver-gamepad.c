@@ -21,11 +21,12 @@
 /* Prototypes */
 static int __init gamepad_init(void);
 static void __exit gamepad_exit(void);
-//static int gamepad_open(struct inode*, struct file*);
-//static int gamepad_release(struct inode*, struct file*);
+static int gamepad_open(struct inode*, struct file*);
+static int gamepad_release(struct inode*, struct file*);
 //static ssize_t gamepad_read(struct file*, char* __user, size_t, loff_t*);
 //static ssize_t gamepad_write(struct file*, char* __user, size_t, loff_t*);
 static irqreturn_t gpio_interrupt(int, void*);
+static uint32_t read_buttons();
 //static int gamepad_fasync(int, struct file*, int mode);
 
 static struct file_operations gamepad_fops =
