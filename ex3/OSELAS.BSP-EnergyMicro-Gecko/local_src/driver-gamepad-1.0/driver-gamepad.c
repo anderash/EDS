@@ -155,3 +155,10 @@ static int release_driver(struct inode *inode, struct file *filp){
     printk("Finished with the driver\n");
     return 0;
 }
+
+
+module_init(gamepad_init);
+module_exit(gamepad_exit);
+
+MODULE_DESCRIPTION("Gamepad driver");
+MODULE_LICENSE("GPL");
