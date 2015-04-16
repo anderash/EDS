@@ -33,7 +33,7 @@ static struct file_operations gamepad_fops =
 {
     .owner = THIS_MODULE,
     .open = gamepad_open,
-    .read = gamepad_read,
+    //.read = gamepad_read,
     /*.write = gamepad_write,*/
     .release = gamepad_release,
     .fasync = gamepad_fasync,
