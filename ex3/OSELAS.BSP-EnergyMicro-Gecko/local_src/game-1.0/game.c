@@ -19,7 +19,7 @@ FILE *gamepad;
 
 int main(int argc, char *argv[])
 {
-printf("Hello World, I'm game!\n");
+printf("Hello World, I'm the guessGame!\n");
 
 new_gamepad();
 initScreen();
@@ -27,9 +27,9 @@ initScreen();
 //	drawRect(0,0,0xF000);
 drawLine(100, 100, 0xF000);
 
-drawText(pongIntro);
+drawText(guess_intro);
 //printf("Welcome!\n");
-//sleep(3);
+sleep(3);
 clearScreen(col_black);
 resetGame();
 run = true;
@@ -45,32 +45,41 @@ exit(EXIT_SUCCESS);
 
 void scoreDraw(int num){
 	clearScreen(col_black);
-	drawScore(letter_h,0,0);	
+	drawScore(letter_h,0,0);
+	drawScore(one, 3,0);
+	drawScore(letter_col,6,0);	
 	switch (high_score){
+		case 0:
+			drawScore(zero,10,0);
+			break;
 		case 1:
-			drawScore(one,0,10);
+			drawScore(one,10,0);
 			break;
 		case 2:
-			drawScore(two,0,10);
+			drawScore(two,10,0);
 			break;
 		case 3:
-			drawScore(three,0,10);
+			drawScore(three,10,0);
 			break;
 		case 4:
-			drawScore(four,0,10);
+			drawScore(four,10,0);
 			break;
 		case 5:
-			drawScore(five,0,10);
+			drawScore(five,10,0);
 			break;
 		case 6:
-			drawScore(six,0,10);
+			drawScore(six,10,0);
 			break;
 		case 7:
-			drawScore(seven,0,10);
+			drawScore(seven,10,0);
 			break;
 	}
-	drawScore(letter_u,10,0);
+	drawScore(letter_u,0,10);
+	drawScore(letter_col,6,10);
 	switch (num){
+		case 0:
+			drawScore(zero,10,10);
+			break;
 		case 1:
 			drawScore(one,10,10);
 			break;
@@ -132,16 +141,17 @@ void sigio_handler(int sig_in){
 	int input = input_func(fgetc(gamepad));
 	button = input;
 	if (tries == maxGuess){
-		if (input == 1){
-			if (score > high_score){
+		if (score > high_score){
 				high_score = score;
 			}
+		if (input == 1){
+			
 			run = true;
 			resetGame();
 		}
 		else{
-			run = false;
-			return;
+			printf("U have no choise..\n");
+			resetGame();
 		}		
 		
 	}
@@ -166,7 +176,7 @@ void guessGame(int button){
 
 	clearScreen(col_black);
 	
-	target = (rand() % 9) + 0.5; //random number from 1 to 8
+	target = (rand() % 8) + 1; //random number from 1 to 8
 	printf("target = %d \n", target);
 	if (button == target) {		
 		printf("You guessed correct\n");
@@ -184,8 +194,7 @@ void guessGame(int button){
 	tries++;
 	if (tries == maxGuess){
 		printf("Out of tries, press 1 to try again\n");
-		scoreDraw(score);
-		sleep(3);
+		scoreDraw(score);				
 	}
 	
 }
