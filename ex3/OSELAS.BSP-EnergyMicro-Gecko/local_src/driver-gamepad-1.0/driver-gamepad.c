@@ -153,6 +153,7 @@ static ssize_t my_read(struct file *filp, char __user *buff, size_t count, loff_
 	copy_to_user(buff, &data, 1);
 	return 1;
 }
+static ssize_t my_write(struct file *filp, const char __user *buff, size_t count, loff_t *offp)
 {
 	printk(KERN_INFO "Writing to buttons doesn't make sense.");
 	return 1;
