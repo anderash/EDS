@@ -25,7 +25,7 @@ new_gamepad();
 initScreen();
 
 //	drawRect(0,0,0xF000);
-drawLine(100, 100, 0xF000);
+//drawLine(100, 100, 0xF000);
 
 drawText(guess_intro);
 //printf("Welcome!\n");
