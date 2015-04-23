@@ -12,4 +12,5 @@ echo 0 > /sys/class/graphics/fbcon/cursor_blink
 
 export PATH=$PATH:/sbin:/usr/bin:/bin
 modprobe driver-gamepad
+game
 exec /bin/sh

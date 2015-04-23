@@ -19,3 +19,4 @@ void drawLine(int x, int y, int color);
 void drawRect(int x, int y, int color);
 void drawText(char *text);
 void drawScore(char *score, int X, int Y);
+void scoreDraw(int num);

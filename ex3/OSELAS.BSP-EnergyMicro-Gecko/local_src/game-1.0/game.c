@@ -38,13 +38,122 @@ high_score = 0;
 	while(run){
 		pause();	
 	}
-clearScreen(col_black);	
+//clearScreen(col_black);	
 
 exit(EXIT_SUCCESS);
 }
 
-void scoreDraw(int num){
+void resetGame(){
+	score = 0;	
+	button = 0;
+	tries = 0;
+	maxGuess = 16;
+	target = 0;
+	printf("I want to play a game..\n");
+	printf("Pick a button. Make a choice, live or die..\n");
+	drawText(saw_face);
+}
+
+int new_gamepad(){
+	gamepad = fopen("/dev/gamepad", "rb");
+	if(!gamepad){
+		printf("Couldn't open gamepad driver\n");
+		return EXIT_FAILURE;
+	}
+	if(fcntl(fileno(gamepad), F_SETOWN, getpid()) == -1) {
+		printf("Error setting owner\n");
+		return EXIT_FAILURE;
+	}
+	if(signal(SIGIO, &sigio_handler) == SIG_ERR){
+		printf("Error while register a signal handler.\n");
+		return EXIT_FAILURE;
+	}
+	long flags = fcntl(fileno(gamepad), F_GETFL);
+	if (fcntl(fileno(gamepad), F_SETFL, flags|FASYNC) == -1){
+		printf("Error setting sync-flag\n");
+		return EXIT_FAILURE;
+	}
+	printf("The gamepad is connected\n");
+	return EXIT_SUCCESS;	
+}
+
+void sigio_handler(int sig_in){
+	int input = input_func(fgetc(gamepad));
+	button = input;
+	printf("Button pressed: %d \n", input);
+	if (input == 0){
+		return;
+	}
+	if (tries == maxGuess){
+		if (score > high_score){
+				sleep(1);
+				high_score = score;
+				drawText(win);
+				sleep(1);
+			}
+		if (input == 1){
+			
+			run = true;
+			resetGame();
+		}
+		else if (input == 6 && high_score >=4){
+			printf("NOOO! You found the way out.. And pressed the magic button\n");
+			drawText(win);
+			run = false;
+		}
+		else{	
+			printf("U have no choise..\n");
+			resetGame();
+		}		
+		
+	}
+	else{
+		guessGame(input);
+	}
+}
+
+int input_func(int input){
+	input = ~input;
+	int i = 0;
+	for ( i = 0; i < 8; i++) {
+		int match = input & (1 << i);
+		if ( (1 << i) == match ) {
+			return (i+1);
+		}
+	}
+	return 0;
+}	
+
+void guessGame(int button){
+
 	clearScreen(col_black);
+	
+	target = (rand() % 8) + 1; //random number from 1 to 8
+	printf("target = %d \n", target);
+	if (button == target) {		
+		printf("You guessed correct\n");
+		drawText(win);
+		sleep(1);
+		clearScreen(col_green);
+		score++;
+		button = 0;
+		//return;
+	}
+	else{
+		clearScreen(col_red);
+		drawText(saw_face);
+//		sleep(1);
+	}
+	tries++;
+	if (tries == maxGuess){
+		printf("Out of tries, press 1 to try again\n");
+		drawText(saw_face);
+		scoreDraw(score);				
+	}
+	
+}
+
+void scoreDraw(int num){
 	drawScore(letter_h,0,0);
 	drawScore(one, 3,0);
 	drawScore(letter_col,6,0);	
@@ -102,99 +211,4 @@ void scoreDraw(int num){
 			drawScore(seven,10,10);
 			break;
 	}
-}
-
-void resetGame(){
-	score = 0;	
-	button = 0;
-	tries = 0;
-	maxGuess = 16;
-	target = 0;
-	printf("I want to play a game..\n");
-	printf("Pick a button. Make a choice, live or die..\n");
-}
-
-int new_gamepad(){
-	gamepad = fopen("/dev/gamepad", "rb");
-	if(!gamepad){
-		printf("Couldn't open gamepad driver\n");
-		return EXIT_FAILURE;
-	}
-	if(fcntl(fileno(gamepad), F_SETOWN, getpid()) == -1) {
-		printf("Error setting owner\n");
-		return EXIT_FAILURE;
-	}
-	if(signal(SIGIO, &sigio_handler) == SIG_ERR){
-		printf("Error while register a signal handler.\n");
-		return EXIT_FAILURE;
-	}
-	long flags = fcntl(fileno(gamepad), F_GETFL);
-	if (fcntl(fileno(gamepad), F_SETFL, flags|FASYNC) == -1){
-		printf("Error setting sync-flag\n");
-		return EXIT_FAILURE;
-	}
-	printf("The gamepad is connected\n");
-	return EXIT_SUCCESS;	
-}
-
-void sigio_handler(int sig_in){
-	int input = input_func(fgetc(gamepad));
-	button = input;
-	if (tries == maxGuess){
-		if (score > high_score){
-				high_score = score;
-			}
-		if (input == 1){
-			
-			run = true;
-			resetGame();
-		}
-		else{
-			printf("U have no choise..\n");
-			resetGame();
-		}		
-		
-	}
-	else{
-		guessGame(input);
-	}
-}
-
-int input_func(int input){
-	input = ~input;
-	int i = 0;
-	for ( i = 0; i < 8; i++) {
-		int match = input & (1 << i);
-		if ( (1 << i) == match ) {
-			return (i+1);
-		}
-	}
-return 0;
-}	
-
-void guessGame(int button){
-
-	clearScreen(col_black);
-	
-	target = (rand() % 8) + 1; //random number from 1 to 8
-	printf("target = %d \n", target);
-	if (button == target) {		
-		printf("You guessed correct\n");
-		drawText(win);
-		sleep(1);
-		clearScreen(col_green);
-		score++;
-		button = 0;
-		//return;
-	}
-	else{
-		clearScreen(col_red);
-		sleep(1);
-	}
-	tries++;
-	if (tries == maxGuess){
-		printf("Out of tries, press 1 to try again\n");
-		scoreDraw(score);				
-	}
-	
 }
