@@ -14,7 +14,6 @@ uint16_t *screen_value;
 
 int fb;
 
-
 void initScreen() {
 	rect.dx = 0;
 	rect.dy = 0;
@@ -46,17 +45,6 @@ void clearScreen(int color){
 	refreshScreen();
 }
 
-void drawLine (int x, int y, int color) {
-	int i;
-	for (i = 0; i < x; ++i)
-	{
-		screen_value[i + y * SCREEN_WIDTH] = color;
-	}
-	refreshScreen();
-}
-
-
-
 void drawRect(int x, int y, int color){
 	int i;
 	int j;
@@ -66,10 +54,6 @@ for(i = x; i < x + 10; i++){
 		}
 	}
 	
-}
-
-void drawBall(int x, int y, int r, int color){
-
 }
 
 void drawText(char *matrix){
@@ -121,6 +105,16 @@ void drawScore(char *matrix, int X, int Y){
 			}
 		drawRect((i+X)*10, (j+Y)*10, color);
 		}
+	}
+	refreshScreen();
+}
+
+// Not a used function in our game
+void drawLine (int x, int y, int color) {
+	int i;
+	for (i = 0; i < x; ++i)
+	{
+		screen_value[i + y * SCREEN_WIDTH] = color;
 	}
 	refreshScreen();
 }

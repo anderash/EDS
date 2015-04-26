@@ -10,7 +10,7 @@
 #include "text.h"
 
 void resetGame(), scoreDraw(int num), guessGame(int button);
-int button, tries, maxGuess, target, score, high_score;
+int tries, maxGuess, target, score, high_score;
 int new_gamepad();
 void sigio_handler(int sig_in);
 int input_func(int input);
@@ -24,11 +24,8 @@ printf("Hello World, I'm the guessGame!\n");
 new_gamepad();
 initScreen();
 
-//	drawRect(0,0,0xF000);
-//drawLine(100, 100, 0xF000);
-
 drawText(guess_intro);
-//printf("Welcome!\n");
+
 sleep(3);
 clearScreen(col_black);
 resetGame();
@@ -38,7 +35,7 @@ high_score = 0;
 	while(run){
 		pause();	
 	}
-//clearScreen(col_black);	
+	
 
 exit(EXIT_SUCCESS);
 }
@@ -79,7 +76,6 @@ int new_gamepad(){
 
 void sigio_handler(int sig_in){
 	int input = input_func(fgetc(gamepad));
-	button = input;
 	printf("Button pressed: %d \n", input);
 	if (input == 0){
 		return;
@@ -137,12 +133,10 @@ void guessGame(int button){
 		clearScreen(col_green);
 		score++;
 		button = 0;
-		//return;
 	}
 	else{
 		clearScreen(col_red);
 		drawText(saw_face);
-//		sleep(1);
 	}
 	tries++;
 	if (tries == maxGuess){
